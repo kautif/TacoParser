@@ -1,10 +1,15 @@
+using GeoCoordinatePortable;
 using System;
+using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace LoggingKata.Test
 {
     public class TacoParserTests
     {
+        const string csvPath = "TacoBell-US-AL.csv";
+
         [Fact]
         public void ShouldDoSomething()
         {
@@ -30,10 +35,21 @@ namespace LoggingKata.Test
             //       each representing a TacoBell location
 
             //Arrange
+            var lines = File.ReadAllLines(csvPath);
+            var parser = new TacoParser();
+            var locations = lines.Select(parser.Parse).ToArray();
 
+            GeoCoordinate geo1 = new GeoCoordinate();
+            double longitude;
+            foreach (var locA in locations) {
+                longitude = locA.Location.Longitude;
+            }
+
+            geo1.Longitude = expected;
             //Act
-
+            var actual = longitude;
             //Assert
+            Assert.Equal(actual, expected);
         }
 
 
